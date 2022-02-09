@@ -31,3 +31,16 @@ describe("/api/quiz path:", () => {
     });
   });
 });
+
+describe("/api/quiz/score path:", () => {
+  describe("GET method:", () => {
+    it("Status 200: returns number of correct answers based on answers in query", () => {
+      return request(app)
+        .get("/api/quiz/score?q1=c&q2=a&q3=b")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.score).toBe(3);
+        });
+    });
+  });
+});
