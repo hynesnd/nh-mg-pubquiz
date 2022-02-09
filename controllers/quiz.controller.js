@@ -1,4 +1,4 @@
-const { fetchQuestions } = require("../models/quiz.model");
+const { fetchQuestions, calculateScore } = require("../models/quiz.model");
 
 exports.getQuestions = (req, res) => {
   fetchQuestions().then((questions) => {
