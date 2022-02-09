@@ -42,5 +42,14 @@ describe("/api/quiz/score path:", () => {
           expect(body.score).toBe(3);
         });
     });
+
+    it("Status 200: returns number of correct answers if not all are correct", () => {
+      return request(app)
+        .get("/api/quiz/score?q1=a&q2=a&q3=b")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.score).toBe(2);
+        });
+    });
   });
 });
