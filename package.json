@@ -1,0 +1,26 @@
+{
+  "name": "nh-mg-pubquiz",
+  "version": "1.0.0",
+  "description": "Pub quiz",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hynesnd/nh-mg-pubquiz.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hynesnd/nh-mg-pubquiz/issues"
+  },
+  "homepage": "https://github.com/hynesnd/nh-mg-pubquiz#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "supertest": "^6.2.2"
+  }
+}
