@@ -12,4 +12,4 @@
 
 - GET api/quiz/ : Should return a json with an array of quiz questions for the front end to present.
 
-- GET api/quiz/answers : Request should include a query of user's submitted answers. Should return the number of correct answers
+- GET api/quiz/score : Request should include a query of user's submitted answers. Should return the number of correct answers
