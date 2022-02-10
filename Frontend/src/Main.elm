@@ -53,20 +53,44 @@ update msg model =
 view : Model -> Html Msg
 view model =
   layout []
-    quizMenu
+    (quizMenu model)
 
 
-quizMenu =
-  row [ width fill
-      , height fill
-      , centerX
-      ] 
-        [ column [width (fillPortion 1)] []
-        , column [width (fillPortion 8)] 
-                  [el [centerX] (text "Hello World")]
-        , column [width (fillPortion 1)] []
+quizMenu model =
+  case model.state of 
+    ViewingWelcome ->
+      row [ width fill
+        , height fill
+        , centerX
+        ] 
+          [ column [width (fillPortion 1)] []
+          , column [width (fillPortion 8)] 
+                    [el [centerX] (text "Welcome to the Pub quiz!")]
+          , column [width (fillPortion 1)] []
+          ]
+    
+    ViewingQuiz ->
+      row [ width fill
+        , height fill
+        , centerX
+        ] 
+          [ column [width (fillPortion 1)] []
+          , column [width (fillPortion 8)] 
+                    [el [centerX] (text "Quiz goes here")]
+          , column [width (fillPortion 1)] []
+          ]
 
-  ]
+    ViewingScore -> 
+      row [ width fill
+        , height fill
+        , centerX
+        ] 
+          [ column [width (fillPortion 1)] []
+          , column [width (fillPortion 8)] 
+                    [el [centerX] (text "Score goes here")]
+          , column [width (fillPortion 1)] []
+          ]
+
 
 
 --SUBSCRIPTIONS
