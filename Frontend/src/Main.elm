@@ -48,6 +48,7 @@ update msg model =
       ({model | state = ViewingQuiz}, Cmd.none)
     ViewScore ->
       ({model | state = ViewingScore}, Cmd.none)
+      
 --VIEW
 view : Model -> Html Msg
 view model =
@@ -57,11 +58,13 @@ view model =
 
 quizMenu =
   row [ width fill
+      , height fill
       , centerX
       ] 
-    [ column [width (fillPortion 1)] []
-    , column [width (fillPortion 8)] [el [centerX] (text "Hello World")]
-    , column [width (fillPortion 1)] []
+        [ column [width (fillPortion 1)] []
+        , column [width (fillPortion 8)] 
+                  [el [centerX] (text "Hello World")]
+        , column [width (fillPortion 1)] []
 
   ]
 
