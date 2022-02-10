@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+#Elm stuff
+Frontend/elm-stuff/
