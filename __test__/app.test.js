@@ -10,6 +10,15 @@ describe("/api path: ", () => {
         expect(body.msg).toBe("Hello World");
       });
   });
+
+  it("Status 404: responds with msg path not found.", () => {
+    return request(app)
+      .get("/not-a-path")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("path not found");
+      });
+  });
 });
 
 describe("/api/quiz path:", () => {
