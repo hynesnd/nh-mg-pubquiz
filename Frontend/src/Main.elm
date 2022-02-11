@@ -1,10 +1,12 @@
 module Main exposing (..)
 
 import Browser
+import Colors
 import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
+import Element.Input as Input
 import Element.Region as Region
 import Html exposing (Html)
 
@@ -82,12 +84,12 @@ header =
         , centerX
         , alignTop
         , padding 20
-        , Background.color (rgb255 35 35 35)
+        , Background.gradient { angle = 3.14, steps = [ Colors.black, Colors.black, Colors.black, Colors.green ] }
         , Border.color (rgb255 235 235 235)
         , Border.width 2
         , Border.rounded 5
         ]
-        [ el [ centerX ] (text "MG's pub quiz 🍻") ]
+        [ el [ centerX, Font.color Colors.orange ] (text "MG's pub quiz 🍻") ]
 
 
 quizMenu model =
@@ -95,14 +97,41 @@ quizMenu model =
         ViewingWelcome ->
             row
                 [ width fill
+                , height fill
                 , centerX
                 , centerY
                 ]
-                [ column [ width (fillPortion 1) ] []
-                , column [ width (fillPortion 8), height fill, spacing 20 ]
-                    [ el [ centerX, centerY ] (text "Welcome to the Pub quiz!")
+                [ column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
+                , column
+                    [ width (fillPortion 8)
+                    , height fill
+                    , spacing 20
+                    , Background.color Colors.black
                     ]
-                , column [ width (fillPortion 1) ] []
+                    [ column
+                        [ centerX
+                        , centerY
+                        , Font.color Colors.orange
+                        , spacing 10
+                        ]
+                        [ el [ centerX ] (text "Welcome to the Pub quiz!")
+                        , Input.button
+                            [ Background.color Colors.white
+                            , Font.color Colors.orange
+                            , centerX
+                            , padding 5
+                            , Border.color Colors.orange
+                            , Border.width 1
+                            , Border.rounded 10
+                            , Element.focused
+                                [ Background.color Colors.greyBrown ]
+                            ]
+                            { onPress = Just ViewQuiz
+                            , label = text "Click here to enter."
+                            }
+                        ]
+                    ]
+                , column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
                 ]
 
         ViewingQuiz ->
