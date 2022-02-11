@@ -125,6 +125,13 @@ header =
         [ el [ centerX, Font.color Colors.orange ] (text "MG's pub quiz 🍻") ]
 
 
+questionDisplay : Question -> Element Msg
+questionDisplay question =
+    column []
+        [ el [] (text question.question)
+        ]
+
+
 quizMenu : Model -> Element Msg
 quizMenu model =
     case model.state of
