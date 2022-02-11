@@ -9,6 +9,8 @@ import Element.Font as Font
 import Element.Input as Input
 import Element.Region as Region
 import Html exposing (Html)
+import Http
+import Json.Decode as JD exposing (Decoder, field, string)
 
 
 
@@ -30,6 +32,7 @@ main =
 
 type alias Model =
     { state : State
+    , currentQuiz : Maybe Quiz
     }
 
 
@@ -41,13 +44,34 @@ type State
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { state = ViewingWelcome }, Cmd.none )
+    ( { state = ViewingWelcome
+      , currentQuiz = Nothing
+      }
+    , Cmd.none
+    )
 
 
 type Msg
     = ViewWelcome
     | ViewQuiz
     | ViewScore
+    | GotQuiz (Result Http.Error Quiz)
+
+
+type alias Quiz =
+    List Question
+
+
+type alias Question =
+    { question : String
+    , options : List Option
+    }
+
+
+type alias Option =
+    { id : String
+    , text : String
+    }
 
 
 
@@ -61,10 +85,18 @@ update msg model =
             ( { model | state = ViewingWelcome }, Cmd.none )
 
         ViewQuiz ->
-            ( { model | state = ViewingQuiz }, Cmd.none )
+            ( model, getQuiz )
 
         ViewScore ->
             ( { model | state = ViewingScore }, Cmd.none )
+
+        GotQuiz result ->
+            case result of
+                Ok quiz ->
+                    ( { model | currentQuiz = Just quiz, state = ViewingQuiz }, Cmd.none )
+
+                Err _ ->
+                    ( model, Cmd.none )
 
 
 
@@ -77,6 +109,7 @@ view model =
         (quizMenu model)
 
 
+header : Element msg
 header =
     row
         [ Region.heading 1
@@ -92,6 +125,7 @@ header =
         [ el [ centerX, Font.color Colors.orange ] (text "MG's pub quiz 🍻") ]
 
 
+quizMenu : Model -> Element Msg
 quizMenu model =
     case model.state of
         ViewingWelcome ->
@@ -142,7 +176,7 @@ quizMenu model =
                 ]
                 [ column [ width (fillPortion 1) ] []
                 , column [ width (fillPortion 8) ]
-                    [ el [ centerX ] (text "Quiz goes here") ]
+                    [ el [ centerX ] (text (Debug.toString model.currentQuiz)) ]
                 , column [ width (fillPortion 1) ] []
                 ]
 
@@ -166,3 +200,39 @@ quizMenu model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
+
+
+
+--HTTP
+
+
+getQuiz : Cmd Msg
+getQuiz =
+    Http.get
+        { url = "http://localhost:9090/api/quiz/"
+        , expect = Http.expectJson GotQuiz quizDecoder
+        }
+
+
+quizDecoder : Decoder (List Question)
+quizDecoder =
+    field "quiz" (JD.list questionDecoder)
+
+
+questionDecoder : Decoder Question
+questionDecoder =
+    JD.map2 Question
+        (field "question" string)
+        (field "options" optionsDecoder)
+
+
+optionsDecoder : Decoder (List Option)
+optionsDecoder =
+    JD.list optionDecoder
+
+
+optionDecoder : Decoder Option
+optionDecoder =
+    JD.map2 Option
+        (field "id" string)
+        (field "text" string)
