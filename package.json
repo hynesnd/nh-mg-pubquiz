@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watch",
-    "start": "node listen.js"
+    "start": "node listen.js",
+    "fe-dev": "cd Frontend && elm-live -- src/Main.elm --output=index.html --debug"
   },
   "repository": {
     "type": "git",
