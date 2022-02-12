@@ -36,7 +36,7 @@ type Model
     | LoadingQuiz
     | ViewingQuiz Quiz
     | LoadingScore
-    | ViewingScore
+    | ViewingScore Int
     | Failure String
 
 
@@ -48,7 +48,6 @@ init _ =
 
 
 type alias Quiz =
-    -- Consider a Dict for this? https://package.elm-lang.org/packages/elm/core/latest/Dict
     List Question
 
 
@@ -74,6 +73,7 @@ type Msg
     | ViewQuiz
     | ViewScore
     | GotQuiz (Result Http.Error Quiz)
+    | GotScore (Result Http.Error Int)
     | SelectAnswer Question String
 
 
@@ -87,12 +87,54 @@ update msg model =
             ( LoadingQuiz, getQuiz )
 
         ViewScore ->
-            ( ViewingScore, Cmd.none )
+            case model of
+                ViewingQuiz quiz ->
+                    case List.map (\q -> Maybe.withDefault "No Answer" q.selectedOption) quiz of
+                        [ answer1, answer2, answer3 ] ->
+                            let
+                                submittedAnswers =
+                                    { answer1 = answer1
+                                    , answer2 = answer2
+                                    , answer3 = answer3
+                                    }
+                            in
+                            ( LoadingQuiz, getScore submittedAnswers )
+
+                        _ ->
+                            ( Failure "Not all questions answered", Cmd.none )
+
+                _ ->
+                    ( Failure "Can't view score unless viewing quiz", Cmd.none )
 
         GotQuiz result ->
             case result of
                 Ok quiz ->
                     ( ViewingQuiz quiz, Cmd.none )
+
+                Err httpError ->
+                    ( Failure <|
+                        case httpError of
+                            BadUrl errString ->
+                                "Bad url: " ++ errString
+
+                            Timeout ->
+                                "Timeout"
+
+                            NetworkError ->
+                                "Network error"
+
+                            BadStatus status ->
+                                "Bad status: " ++ String.fromInt status
+
+                            BadBody bodyString ->
+                                "Bad Body: " ++ bodyString
+                    , Cmd.none
+                    )
+
+        GotScore result ->
+            case result of
+                Ok score ->
+                    ( ViewingScore score, Cmd.none )
 
                 Err httpError ->
                     ( Failure <|
@@ -223,18 +265,25 @@ optionDisplay question option =
         }
 
 
+pageFrame content =
+    row
+        [ width fill
+        , height fill
+        , centerX
+        , Background.color Colors.black
+        ]
+        [ column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
+        , content
+        , column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
+        ]
+
+
 quizMenu : Model -> Element Msg
 quizMenu model =
-    case model of
-        ViewingWelcome ->
-            row
-                [ width fill
-                , height fill
-                , centerX
-                , centerY
-                ]
-                [ column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
-                , column
+    pageFrame <|
+        case model of
+            ViewingWelcome ->
+                column
                     [ width (fillPortion 8)
                     , height fill
                     , spacing 20
@@ -263,27 +312,18 @@ quizMenu model =
                             }
                         ]
                     ]
-                , column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
-                ]
 
-        ViewingQuiz quiz ->
-            let
-                allQuestionsAnswered =
-                    List.all (\q -> q.selectedOption /= Nothing) quiz
-            in
-            row
-                [ width fill
-                , height fill
-                , centerX
-                , Background.color Colors.black
-                ]
-                [ column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
-                , column
+            ViewingQuiz quiz ->
+                let
+                    allQuestionsAnswered =
+                        List.all (\q -> q.selectedOption /= Nothing) quiz
+                in
+                column
                     [ width (fillPortion 8)
                     , spacing 20
                     , Background.color Colors.black
                     ]
-                  <|
+                <|
                     List.map questionDisplay quiz
                         ++ [ if allQuestionsAnswered then
                                 Input.button
@@ -297,61 +337,47 @@ quizMenu model =
                                     , Border.width 1
                                     , Border.rounded 10
                                     ]
-                                    { onPress = Nothing, label = text "Submit Answers" }
+                                    { onPress = Just ViewScore, label = text "Submit Answers" }
 
                              else
                                 none
                            ]
-                , column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
-                ]
 
-        ViewingScore ->
-            row
-                [ width fill
-                , height fill
-                , centerX
-                ]
-                [ column [ width (fillPortion 1) ] []
-                , column [ width (fillPortion 8) ]
-                    [ el [ centerX ] (text "Score goes here") ]
-                , column [ width (fillPortion 1) ] []
-                ]
+            ViewingScore score ->
+                column [ width (fillPortion 8) ]
+                    [ column
+                        [ centerX
+                        , centerY
+                        , Font.color Colors.orange
+                        , spacing 10
+                        , padding 10
+                        , Background.color Colors.greyBrown
+                        , Border.color Colors.orange
+                        , Border.width 1
+                        , Border.rounded 10
+                        ]
+                        [ if score == 2 then
+                            text ("Your score is: " ++ String.fromInt score)
 
-        LoadingQuiz ->
-            row
-                [ width fill
-                , height fill
-                , centerX
-                ]
-                [ column [ width (fillPortion 1) ] []
-                , column [ width (fillPortion 8) ]
+                          else if score > 2 then
+                            text ("Congratulations! Your score is: " ++ String.fromInt score)
+
+                          else
+                            text ("Bad luck! Your score is: " ++ String.fromInt score)
+                        ]
+                    ]
+
+            LoadingQuiz ->
+                column [ width (fillPortion 8) ]
                     [ el [ centerX ] (text "Loading Quiz, Please wait...") ]
-                , column [ width (fillPortion 1) ] []
-                ]
 
-        LoadingScore ->
-            row
-                [ width fill
-                , height fill
-                , centerX
-                ]
-                [ column [ width (fillPortion 1) ] []
-                , column [ width (fillPortion 8) ]
+            LoadingScore ->
+                column [ width (fillPortion 8) ]
                     [ el [ centerX ] (text "Loading Score, Please wait...") ]
-                , column [ width (fillPortion 1) ] []
-                ]
 
-        Failure errString ->
-            row
-                [ width fill
-                , height fill
-                , centerX
-                ]
-                [ column [ width (fillPortion 1) ] []
-                , column [ width (fillPortion 8) ]
+            Failure errString ->
+                column [ width (fillPortion 8) ]
                     [ el [ centerX ] (text ("Something went wrong :( " ++ errString)) ]
-                , column [ width (fillPortion 1) ] []
-                ]
 
 
 
@@ -372,6 +398,14 @@ getQuiz =
     Http.get
         { url = "http://localhost:9090/api/quiz/"
         , expect = Http.expectJson GotQuiz quizDecoder
+        }
+
+
+getScore : { answer1 : String, answer2 : String, answer3 : String } -> Cmd Msg
+getScore { answer1, answer2, answer3 } =
+    Http.get
+        { url = "http://localhost:9090/api/quiz/score?q1=" ++ answer1 ++ "&q2=" ++ answer2 ++ "&q3=" ++ answer3
+        , expect = Http.expectJson GotScore (field "score" JD.int)
         }
 
 
