@@ -2,9 +2,7 @@ const { fetchQuestions, calculateScore } = require("../models/quiz.model");
 
 exports.getQuestions = (req, res) => {
   //call fetchQuestions then send response with questions array.
-  fetchQuestions().then((questions) => {
-    res.status(200).send({ quiz: questions });
-  });
+  return res.status(200).send({ quiz: fetchQuestions() });
 };
 
 exports.getScore = (req, res) => {
@@ -12,7 +10,6 @@ exports.getScore = (req, res) => {
   const { q1, q2, q3 } = req.query;
 
   //call calculateScore with answers then send response with score.
-  calculateScore(q1, q2, q3).then((score) => {
-    res.status(200).send({ score });
-  });
+
+  return res.status(200).send({ score: calculateScore(q1, q2, q3) });
 };
