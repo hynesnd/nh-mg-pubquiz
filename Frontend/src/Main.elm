@@ -9,7 +9,7 @@ import Element.Font as Font
 import Element.Input as Input
 import Element.Region as Region
 import Html exposing (Html)
-import Http
+import Http exposing (Error(..))
 import Json.Decode as JD exposing (Decoder, Error(..), field, string)
 
 
@@ -37,11 +37,7 @@ type Model
     | ViewingQuiz Quiz
     | LoadingScore
     | ViewingScore
-    | Failure
-
-
-
---Failure String
+    | Failure String
 
 
 init : () -> ( Model, Cmd Msg )
@@ -51,21 +47,15 @@ init _ =
     )
 
 
-type Msg
-    = ViewWelcome
-    | ViewQuiz
-    | ViewScore
-    | GotQuiz (Result Http.Error Quiz)
-
-
 type alias Quiz =
+    -- Consider a Dict for this? https://package.elm-lang.org/packages/elm/core/latest/Dict
     List Question
 
 
 type alias Question =
     { question : String
     , options : List Option
-    , selectedOption : Maybe Char
+    , selectedOption : Maybe String
     }
 
 
@@ -77,6 +67,14 @@ type alias Option =
 
 
 --UPDATE
+
+
+type Msg
+    = ViewWelcome
+    | ViewQuiz
+    | ViewScore
+    | GotQuiz (Result Http.Error Quiz)
+    | SelectAnswer Question String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -96,8 +94,45 @@ update msg model =
                 Ok quiz ->
                     ( ViewingQuiz quiz, Cmd.none )
 
-                Err _ ->
-                    ( Failure, Cmd.none )
+                Err httpError ->
+                    ( Failure <|
+                        case httpError of
+                            BadUrl errString ->
+                                "Bad url: " ++ errString
+
+                            Timeout ->
+                                "Timeout"
+
+                            NetworkError ->
+                                "Network error"
+
+                            BadStatus status ->
+                                "Bad status: " ++ String.fromInt status
+
+                            BadBody bodyString ->
+                                "Bad Body: " ++ bodyString
+                    , Cmd.none
+                    )
+
+        SelectAnswer question answerId ->
+            case model of
+                ViewingQuiz quiz ->
+                    let
+                        newQuiz =
+                            List.map
+                                (\q ->
+                                    if question == q then
+                                        { q | selectedOption = Just answerId }
+
+                                    else
+                                        q
+                                )
+                                quiz
+                    in
+                    ( ViewingQuiz newQuiz, Cmd.none )
+
+                _ ->
+                    ( Failure "Can't select option unless viewing quiz", Cmd.none )
 
 
 
@@ -126,7 +161,7 @@ header =
         [ el [ centerX, Font.color Colors.orange ] (text "MG's pub quiz 🍻") ]
 
 
-questionDisplay : Question -> Element msg
+questionDisplay : Question -> Element Msg
 questionDisplay question =
     column
         [ spacing 10
@@ -144,20 +179,46 @@ questionDisplay question =
             [ spacing 10
             , centerX
             ]
-            (List.map optionDisplay question.options)
+          <|
+            List.map (optionDisplay question) question.options
         ]
 
 
-optionDisplay : Option -> Element msg
-optionDisplay option =
+optionDisplay : Question -> Option -> Element Msg
+optionDisplay question option =
+    let
+        isSelected =
+            case question.selectedOption of
+                Nothing ->
+                    False
+
+                Just optionId ->
+                    optionId == option.id
+    in
     Input.button
         [ padding 5
-        , Background.color Colors.black
+        , Background.color <|
+            if isSelected then
+                Colors.orange
+
+            else
+                Colors.black
+        , Font.color <|
+            if isSelected then
+                Colors.black
+
+            else
+                Colors.orange
         , Border.color Colors.orange
         , Border.width 1
         , Border.rounded 10
         ]
-        { onPress = Nothing
+        { onPress =
+            if isSelected then
+                Nothing
+
+            else
+                Just <| SelectAnswer question option.id
         , label = text option.text
         }
 
@@ -206,19 +267,41 @@ quizMenu model =
                 ]
 
         ViewingQuiz quiz ->
+            let
+                allQuestionsAnswered =
+                    List.all (\q -> q.selectedOption /= Nothing) quiz
+            in
             row
                 [ width fill
                 , height fill
                 , centerX
+                , Background.color Colors.black
                 ]
                 [ column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
                 , column
                     [ width (fillPortion 8)
-                    , height fill
                     , spacing 20
                     , Background.color Colors.black
                     ]
-                    (List.map (\question -> questionDisplay question) quiz)
+                  <|
+                    List.map questionDisplay quiz
+                        ++ [ if allQuestionsAnswered then
+                                Input.button
+                                    [ spacing 10
+                                    , padding 10
+                                    , centerX
+                                    , centerY
+                                    , Font.color Colors.orange
+                                    , Background.color Colors.greyBrown
+                                    , Border.color Colors.orange
+                                    , Border.width 1
+                                    , Border.rounded 10
+                                    ]
+                                    { onPress = Nothing, label = text "Submit Answers" }
+
+                             else
+                                none
+                           ]
                 , column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
                 ]
 
@@ -258,7 +341,7 @@ quizMenu model =
                 , column [ width (fillPortion 1) ] []
                 ]
 
-        Failure ->
+        Failure errString ->
             row
                 [ width fill
                 , height fill
@@ -266,7 +349,7 @@ quizMenu model =
                 ]
                 [ column [ width (fillPortion 1) ] []
                 , column [ width (fillPortion 8) ]
-                    [ el [ centerX ] (text "Something went wrong :(") ]
+                    [ el [ centerX ] (text ("Something went wrong :( " ++ errString)) ]
                 , column [ width (fillPortion 1) ] []
                 ]
 

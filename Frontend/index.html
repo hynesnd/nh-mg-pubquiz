@@ -10734,7 +10734,9 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$none;
 };
-var $author$project$Main$Failure = {$: 'Failure'};
+var $author$project$Main$Failure = function (a) {
+	return {$: 'Failure', a: a};
+};
 var $author$project$Main$LoadingQuiz = {$: 'LoadingQuiz'};
 var $author$project$Main$ViewingQuiz = function (a) {
 	return {$: 'ViewingQuiz', a: a};
@@ -11029,7 +11031,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2($author$project$Main$LoadingQuiz, $author$project$Main$getQuiz);
 			case 'ViewScore':
 				return _Utils_Tuple2($author$project$Main$ViewingScore, $elm$core$Platform$Cmd$none);
-			default:
+			case 'GotQuiz':
 				var result = msg.a;
 				if (result.$ === 'Ok') {
 					var quiz = result.a;
@@ -11037,7 +11039,50 @@ var $author$project$Main$update = F2(
 						$author$project$Main$ViewingQuiz(quiz),
 						$elm$core$Platform$Cmd$none);
 				} else {
-					return _Utils_Tuple2($author$project$Main$Failure, $elm$core$Platform$Cmd$none);
+					var httpError = result.a;
+					return _Utils_Tuple2(
+						$author$project$Main$Failure(
+							function () {
+								switch (httpError.$) {
+									case 'BadUrl':
+										var errString = httpError.a;
+										return 'Bad url: ' + errString;
+									case 'Timeout':
+										return 'Timeout';
+									case 'NetworkError':
+										return 'Network error';
+									case 'BadStatus':
+										var status = httpError.a;
+										return 'Bad status: ' + $elm$core$String$fromInt(status);
+									default:
+										var bodyString = httpError.a;
+										return 'Bad Body: ' + bodyString;
+								}
+							}()),
+						$elm$core$Platform$Cmd$none);
+				}
+			default:
+				var question = msg.a;
+				var answerId = msg.b;
+				if (model.$ === 'ViewingQuiz') {
+					var quiz = model.a;
+					var newQuiz = A2(
+						$elm$core$List$map,
+						function (q) {
+							return _Utils_eq(question, q) ? _Utils_update(
+								q,
+								{
+									selectedOption: $elm$core$Maybe$Just(answerId)
+								}) : q;
+						},
+						quiz);
+					return _Utils_Tuple2(
+						$author$project$Main$ViewingQuiz(newQuiz),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(
+						$author$project$Main$Failure('Can\'t select option unless viewing quiz'),
+						$elm$core$Platform$Cmd$none);
 				}
 		}
 	});
@@ -16917,6 +16962,13 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 var $mdgriffith$elm_ui$Element$layout = $mdgriffith$elm_ui$Element$layoutWith(
 	{options: _List_Nil});
 var $author$project$Main$ViewQuiz = {$: 'ViewQuiz'};
+var $elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			$elm$core$List$any,
+			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
+			list);
+	});
 var $mdgriffith$elm_ui$Internal$Model$Button = {$: 'Button'};
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$html$Html$Attributes$boolProperty = F2(
@@ -17213,22 +17265,41 @@ var $mdgriffith$elm_ui$Element$focused = function (decs) {
 			$mdgriffith$elm_ui$Internal$Model$unwrapDecorations(decs)));
 };
 var $author$project$Colors$greyBrown = A3($mdgriffith$elm_ui$Element$rgb255, 68, 55, 55);
-var $author$project$Main$optionDisplay = function (option) {
-	return A2(
-		$mdgriffith$elm_ui$Element$Input$button,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$padding(5),
-				$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black),
-				$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$orange),
-				$mdgriffith$elm_ui$Element$Border$width(1),
-				$mdgriffith$elm_ui$Element$Border$rounded(10)
-			]),
-		{
-			label: $mdgriffith$elm_ui$Element$text(option.text),
-			onPress: $elm$core$Maybe$Nothing
-		});
-};
+var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
+var $author$project$Main$SelectAnswer = F2(
+	function (a, b) {
+		return {$: 'SelectAnswer', a: a, b: b};
+	});
+var $author$project$Main$optionDisplay = F2(
+	function (question, option) {
+		var isSelected = function () {
+			var _v0 = question.selectedOption;
+			if (_v0.$ === 'Nothing') {
+				return false;
+			} else {
+				var optionId = _v0.a;
+				return _Utils_eq(optionId, option.id);
+			}
+		}();
+		return A2(
+			$mdgriffith$elm_ui$Element$Input$button,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$padding(5),
+					$mdgriffith$elm_ui$Element$Background$color(
+					isSelected ? $author$project$Colors$orange : $author$project$Colors$black),
+					$mdgriffith$elm_ui$Element$Font$color(
+					isSelected ? $author$project$Colors$black : $author$project$Colors$orange),
+					$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$orange),
+					$mdgriffith$elm_ui$Element$Border$width(1),
+					$mdgriffith$elm_ui$Element$Border$rounded(10)
+				]),
+			{
+				label: $mdgriffith$elm_ui$Element$text(option.text),
+				onPress: isSelected ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
+					A2($author$project$Main$SelectAnswer, question, option.id))
+			});
+	});
 var $mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
 	function (a, b, c) {
 		return {$: 'SpacingStyle', a: a, b: b, c: c};
@@ -17276,7 +17347,10 @@ var $author$project$Main$questionDisplay = function (question) {
 						$mdgriffith$elm_ui$Element$spacing(10),
 						$mdgriffith$elm_ui$Element$centerX
 					]),
-				A2($elm$core$List$map, $author$project$Main$optionDisplay, question.options))
+				A2(
+					$elm$core$List$map,
+					$author$project$Main$optionDisplay(question),
+					question.options))
 			]));
 };
 var $author$project$Colors$white = A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
@@ -17368,13 +17442,20 @@ var $author$project$Main$quizMenu = function (model) {
 					]));
 		case 'ViewingQuiz':
 			var quiz = model.a;
+			var allQuestionsAnswered = A2(
+				$elm$core$List$all,
+				function (q) {
+					return !_Utils_eq(q.selectedOption, $elm$core$Maybe$Nothing);
+				},
+				quiz);
 			return A2(
 				$mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$centerX
+						$mdgriffith$elm_ui$Element$centerX,
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black)
 					]),
 				_List_fromArray(
 					[
@@ -17394,16 +17475,32 @@ var $author$project$Main$quizMenu = function (model) {
 							[
 								$mdgriffith$elm_ui$Element$width(
 								$mdgriffith$elm_ui$Element$fillPortion(8)),
-								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 								$mdgriffith$elm_ui$Element$spacing(20),
 								$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black)
 							]),
-						A2(
-							$elm$core$List$map,
-							function (question) {
-								return $author$project$Main$questionDisplay(question);
-							},
-							quiz)),
+						_Utils_ap(
+							A2($elm$core$List$map, $author$project$Main$questionDisplay, quiz),
+							_List_fromArray(
+								[
+									allQuestionsAnswered ? A2(
+									$mdgriffith$elm_ui$Element$Input$button,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$spacing(10),
+											$mdgriffith$elm_ui$Element$padding(10),
+											$mdgriffith$elm_ui$Element$centerX,
+											$mdgriffith$elm_ui$Element$centerY,
+											$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$orange),
+											$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$greyBrown),
+											$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$orange),
+											$mdgriffith$elm_ui$Element$Border$width(1),
+											$mdgriffith$elm_ui$Element$Border$rounded(10)
+										]),
+									{
+										label: $mdgriffith$elm_ui$Element$text('Submit Answers'),
+										onPress: $elm$core$Maybe$Nothing
+									}) : $mdgriffith$elm_ui$Element$none
+								]))),
 						A2(
 						$mdgriffith$elm_ui$Element$column,
 						_List_fromArray(
@@ -17545,6 +17642,7 @@ var $author$project$Main$quizMenu = function (model) {
 						_List_Nil)
 					]));
 		default:
+			var errString = model.a;
 			return A2(
 				$mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
@@ -17576,7 +17674,7 @@ var $author$project$Main$quizMenu = function (model) {
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
 									[$mdgriffith$elm_ui$Element$centerX]),
-								$mdgriffith$elm_ui$Element$text('Something went wrong :('))
+								$mdgriffith$elm_ui$Element$text('Something went wrong :( ' + errString))
 							])),
 						A2(
 						$mdgriffith$elm_ui$Element$column,
@@ -17601,7 +17699,7 @@ var $author$project$Main$view = function (model) {
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Option":{"args":[],"type":"{ id : String.String, text : String.String }"},"Main.Question":{"args":[],"type":"{ question : String.String, options : List.List Main.Option, selectedOption : Maybe.Maybe Char.Char }"},"Main.Quiz":{"args":[],"type":"List.List Main.Question"}},"unions":{"Main.Msg":{"args":[],"tags":{"ViewWelcome":[],"ViewQuiz":[],"ViewScore":[],"GotQuiz":["Result.Result Http.Error Main.Quiz"]}},"Char.Char":{"args":[],"tags":{"Char":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}},"Basics.Int":{"args":[],"tags":{"Int":[]}}}}})}});}(this));
+	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Option":{"args":[],"type":"{ id : String.String, text : String.String }"},"Main.Question":{"args":[],"type":"{ question : String.String, options : List.List Main.Option, selectedOption : Maybe.Maybe String.String }"},"Main.Quiz":{"args":[],"type":"List.List Main.Question"}},"unions":{"Main.Msg":{"args":[],"tags":{"ViewWelcome":[],"ViewQuiz":[],"ViewScore":[],"GotQuiz":["Result.Result Http.Error Main.Quiz"],"SelectAnswer":["Main.Question","String.String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}},"Basics.Int":{"args":[],"tags":{"Int":[]}}}}})}});}(this));
 
   var app = Elm.Main.init({ node: document.getElementById("elm") });
 }
