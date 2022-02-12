@@ -1,6 +1,6 @@
 const fsPromises = require("fs").promises;
 const path = require("path");
-const quiz = require("../../quizes/quiz.json");
+const quiz = require("../quizes/quiz.json");
 
 exports.fetchQuestions = () => {
   const quizWithoutAnswers = quiz.map(({ answer, ...remainingValues }) => ({
