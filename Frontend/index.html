@@ -10731,7 +10731,7 @@ var $author$project$Main$init = function (_v0) {
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Main$subscriptions = function (model) {
+var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
 var $author$project$Main$Failure = function (a) {
@@ -10995,33 +10995,33 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
-var $author$project$Main$Question = F3(
+var $author$project$Quiz$Question = F3(
 	function (question, options, selectedOption) {
 		return {options: options, question: question, selectedOption: selectedOption};
 	});
-var $author$project$Main$Option = F2(
+var $author$project$Quiz$Option = F2(
 	function (id, text) {
 		return {id: id, text: text};
 	});
-var $author$project$Main$optionDecoder = A3(
+var $author$project$Quiz$optionDecoder = A3(
 	$elm$json$Json$Decode$map2,
-	$author$project$Main$Option,
+	$author$project$Quiz$Option,
 	A2($elm$json$Json$Decode$field, 'id', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'text', $elm$json$Json$Decode$string));
-var $author$project$Main$optionsDecoder = $elm$json$Json$Decode$list($author$project$Main$optionDecoder);
-var $author$project$Main$questionDecoder = A4(
+var $author$project$Quiz$optionsDecoder = $elm$json$Json$Decode$list($author$project$Quiz$optionDecoder);
+var $author$project$Quiz$questionDecoder = A4(
 	$elm$json$Json$Decode$map3,
-	$author$project$Main$Question,
+	$author$project$Quiz$Question,
 	A2($elm$json$Json$Decode$field, 'question', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'options', $author$project$Main$optionsDecoder),
+	A2($elm$json$Json$Decode$field, 'options', $author$project$Quiz$optionsDecoder),
 	$elm$json$Json$Decode$succeed($elm$core$Maybe$Nothing));
-var $author$project$Main$quizDecoder = A2(
+var $author$project$Quiz$quizDecoder = A2(
 	$elm$json$Json$Decode$field,
 	'quiz',
-	$elm$json$Json$Decode$list($author$project$Main$questionDecoder));
+	$elm$json$Json$Decode$list($author$project$Quiz$questionDecoder));
 var $author$project$Main$getQuiz = $elm$http$Http$get(
 	{
-		expect: A2($elm$http$Http$expectJson, $author$project$Main$GotQuiz, $author$project$Main$quizDecoder),
+		expect: A2($elm$http$Http$expectJson, $author$project$Main$GotQuiz, $author$project$Quiz$quizDecoder),
 		url: 'http://localhost:9090/api/quiz/'
 	});
 var $author$project$Main$GotScore = function (a) {
@@ -17045,6 +17045,14 @@ var $elm$core$List$all = F2(
 			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
 			list);
 	});
+var $author$project$Quiz$allQuestionsAnswered = function (quiz) {
+	return A2(
+		$elm$core$List$all,
+		function (q) {
+			return !_Utils_eq(q.selectedOption, $elm$core$Maybe$Nothing);
+		},
+		quiz);
+};
 var $mdgriffith$elm_ui$Internal$Model$Button = {$: 'Button'};
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$html$Html$Attributes$boolProperty = F2(
@@ -17523,12 +17531,6 @@ var $author$project$Main$quizMenu = function (model) {
 							]));
 				case 'ViewingQuiz':
 					var quiz = model.a;
-					var allQuestionsAnswered = A2(
-						$elm$core$List$all,
-						function (q) {
-							return !_Utils_eq(q.selectedOption, $elm$core$Maybe$Nothing);
-						},
-						quiz);
 					return A2(
 						$mdgriffith$elm_ui$Element$column,
 						_List_fromArray(
@@ -17542,7 +17544,7 @@ var $author$project$Main$quizMenu = function (model) {
 							A2($elm$core$List$map, $author$project$Main$questionDisplay, quiz),
 							_List_fromArray(
 								[
-									allQuestionsAnswered ? A2(
+									$author$project$Quiz$allQuestionsAnswered(quiz) ? A2(
 									$mdgriffith$elm_ui$Element$Input$button,
 									_List_fromArray(
 										[
@@ -17658,7 +17660,7 @@ var $author$project$Main$view = function (model) {
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Option":{"args":[],"type":"{ id : String.String, text : String.String }"},"Main.Question":{"args":[],"type":"{ question : String.String, options : List.List Main.Option, selectedOption : Maybe.Maybe String.String }"},"Main.Quiz":{"args":[],"type":"List.List Main.Question"}},"unions":{"Main.Msg":{"args":[],"tags":{"ViewWelcome":[],"ViewQuiz":[],"ViewScore":[],"GotQuiz":["Result.Result Http.Error Main.Quiz"],"GotScore":["Result.Result Http.Error Basics.Int"],"SelectAnswer":["Main.Question","String.String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
+	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Quiz.Option":{"args":[],"type":"{ id : String.String, text : String.String }"},"Quiz.Question":{"args":[],"type":"{ question : String.String, options : List.List Quiz.Option, selectedOption : Maybe.Maybe String.String }"},"Quiz.Quiz":{"args":[],"type":"List.List Quiz.Question"}},"unions":{"Main.Msg":{"args":[],"tags":{"ViewWelcome":[],"ViewQuiz":[],"ViewScore":[],"GotQuiz":["Result.Result Http.Error Quiz.Quiz"],"GotScore":["Result.Result Http.Error Basics.Int"],"SelectAnswer":["Quiz.Question","String.String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
 
   var app = Elm.Main.init({ node: document.getElementById("elm") });
 }

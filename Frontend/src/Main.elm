@@ -10,7 +10,8 @@ import Element.Input as Input
 import Element.Region as Region
 import Html exposing (Html)
 import Http exposing (Error(..))
-import Json.Decode as JD exposing (Decoder, Error(..), field, string)
+import Json.Decode exposing (Error(..), field, int)
+import Quiz exposing (Option, Question, Quiz, quizDecoder)
 
 
 
@@ -45,23 +46,6 @@ init _ =
     ( ViewingWelcome
     , Cmd.none
     )
-
-
-type alias Quiz =
-    List Question
-
-
-type alias Question =
-    { question : String
-    , options : List Option
-    , selectedOption : Maybe String
-    }
-
-
-type alias Option =
-    { id : String
-    , text : String
-    }
 
 
 
@@ -265,6 +249,7 @@ optionDisplay question option =
         }
 
 
+pageFrame : Element msg -> Element msg
 pageFrame content =
     row
         [ width fill
@@ -314,10 +299,6 @@ quizMenu model =
                     ]
 
             ViewingQuiz quiz ->
-                let
-                    allQuestionsAnswered =
-                        List.all (\q -> q.selectedOption /= Nothing) quiz
-                in
                 column
                     [ width (fillPortion 8)
                     , spacing 20
@@ -325,7 +306,7 @@ quizMenu model =
                     ]
                 <|
                     List.map questionDisplay quiz
-                        ++ [ if allQuestionsAnswered then
+                        ++ [ if Quiz.allQuestionsAnswered quiz then
                                 Input.button
                                     [ spacing 10
                                     , padding 10
@@ -385,7 +366,7 @@ quizMenu model =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions _ =
     Sub.none
 
 
@@ -405,30 +386,5 @@ getScore : { answer1 : String, answer2 : String, answer3 : String } -> Cmd Msg
 getScore { answer1, answer2, answer3 } =
     Http.get
         { url = "http://localhost:9090/api/quiz/score?q1=" ++ answer1 ++ "&q2=" ++ answer2 ++ "&q3=" ++ answer3
-        , expect = Http.expectJson GotScore (field "score" JD.int)
+        , expect = Http.expectJson GotScore (field "score" int)
         }
-
-
-quizDecoder : Decoder (List Question)
-quizDecoder =
-    field "quiz" (JD.list questionDecoder)
-
-
-questionDecoder : Decoder Question
-questionDecoder =
-    JD.map3 Question
-        (field "question" string)
-        (field "options" optionsDecoder)
-        (JD.succeed Nothing)
-
-
-optionsDecoder : Decoder (List Option)
-optionsDecoder =
-    JD.list optionDecoder
-
-
-optionDecoder : Decoder Option
-optionDecoder =
-    JD.map2 Option
-        (field "id" string)
-        (field "text" string)
