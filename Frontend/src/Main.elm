@@ -17,6 +17,7 @@ import Json.Decode as JD exposing (Decoder, Error(..), field, string)
 --MAIN
 
 
+main : Program () Model Msg
 main =
     Browser.element
         { init = init
@@ -125,6 +126,7 @@ header =
         [ el [ centerX, Font.color Colors.orange ] (text "MG's pub quiz 🍻") ]
 
 
+questionDisplay : Question -> Element msg
 questionDisplay question =
     column
         [ spacing 10
@@ -146,6 +148,7 @@ questionDisplay question =
         ]
 
 
+optionDisplay : Option -> Element msg
 optionDisplay option =
     Input.button
         [ padding 5
