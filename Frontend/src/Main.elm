@@ -127,13 +127,36 @@ header =
 
 questionDisplay question =
     column
-        [ spacing 20
+        [ spacing 10
+        , padding 10
         , centerX
         , centerY
         , Font.color Colors.orange
+        , Background.color Colors.greyBrown
+        , Border.color Colors.orange
+        , Border.width 1
+        , Border.rounded 10
         ]
         [ el [] (text question.question)
+        , row
+            [ spacing 10
+            , centerX
+            ]
+            (List.map optionDisplay question.options)
         ]
+
+
+optionDisplay option =
+    Input.button
+        [ padding 5
+        , Background.color Colors.black
+        , Border.color Colors.orange
+        , Border.width 1
+        , Border.rounded 10
+        ]
+        { onPress = Nothing
+        , label = text option.text
+        }
 
 
 quizMenu : Model -> Element Msg
