@@ -10,7 +10,7 @@ import Element.Input as Input
 import Element.Region as Region
 import Html exposing (Html)
 import Http
-import Json.Decode as JD exposing (Decoder, field, string)
+import Json.Decode as JD exposing (Decoder, Error(..), field, string)
 
 
 
@@ -30,23 +30,22 @@ main =
 --MODEL
 
 
-type alias Model =
-    { state : State
-    , currentQuiz : Maybe Quiz
-    }
-
-
-type State
+type Model
     = ViewingWelcome
-    | ViewingQuiz
+    | LoadingQuiz
+    | ViewingQuiz Quiz
+    | LoadingScore
     | ViewingScore
+    | Failure
+
+
+
+--Failure String
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { state = ViewingWelcome
-      , currentQuiz = Nothing
-      }
+    ( ViewingWelcome
     , Cmd.none
     )
 
@@ -65,6 +64,7 @@ type alias Quiz =
 type alias Question =
     { question : String
     , options : List Option
+    , selectedOption : Maybe Char
     }
 
 
@@ -82,21 +82,21 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ViewWelcome ->
-            ( { model | state = ViewingWelcome }, Cmd.none )
+            ( ViewingWelcome, Cmd.none )
 
         ViewQuiz ->
-            ( model, getQuiz )
+            ( LoadingQuiz, getQuiz )
 
         ViewScore ->
-            ( { model | state = ViewingScore }, Cmd.none )
+            ( ViewingScore, Cmd.none )
 
         GotQuiz result ->
             case result of
                 Ok quiz ->
-                    ( { model | currentQuiz = Just quiz, state = ViewingQuiz }, Cmd.none )
+                    ( ViewingQuiz quiz, Cmd.none )
 
                 Err _ ->
-                    ( model, Cmd.none )
+                    ( Failure, Cmd.none )
 
 
 
@@ -125,16 +125,20 @@ header =
         [ el [ centerX, Font.color Colors.orange ] (text "MG's pub quiz 🍻") ]
 
 
-questionDisplay : Question -> Element Msg
 questionDisplay question =
-    column []
+    column
+        [ spacing 20
+        , centerX
+        , centerY
+        , Font.color Colors.orange
+        ]
         [ el [] (text question.question)
         ]
 
 
 quizMenu : Model -> Element Msg
 quizMenu model =
-    case model.state of
+    case model of
         ViewingWelcome ->
             row
                 [ width fill
@@ -175,16 +179,21 @@ quizMenu model =
                 , column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
                 ]
 
-        ViewingQuiz ->
+        ViewingQuiz quiz ->
             row
                 [ width fill
                 , height fill
                 , centerX
                 ]
-                [ column [ width (fillPortion 1) ] []
-                , column [ width (fillPortion 8) ]
-                    [ el [ centerX ] (text (Debug.toString model.currentQuiz)) ]
-                , column [ width (fillPortion 1) ] []
+                [ column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
+                , column
+                    [ width (fillPortion 8)
+                    , height fill
+                    , spacing 20
+                    , Background.color Colors.black
+                    ]
+                    (List.map (\question -> questionDisplay question) quiz)
+                , column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
                 ]
 
         ViewingScore ->
@@ -196,6 +205,42 @@ quizMenu model =
                 [ column [ width (fillPortion 1) ] []
                 , column [ width (fillPortion 8) ]
                     [ el [ centerX ] (text "Score goes here") ]
+                , column [ width (fillPortion 1) ] []
+                ]
+
+        LoadingQuiz ->
+            row
+                [ width fill
+                , height fill
+                , centerX
+                ]
+                [ column [ width (fillPortion 1) ] []
+                , column [ width (fillPortion 8) ]
+                    [ el [ centerX ] (text "Loading Quiz, Please wait...") ]
+                , column [ width (fillPortion 1) ] []
+                ]
+
+        LoadingScore ->
+            row
+                [ width fill
+                , height fill
+                , centerX
+                ]
+                [ column [ width (fillPortion 1) ] []
+                , column [ width (fillPortion 8) ]
+                    [ el [ centerX ] (text "Loading Score, Please wait...") ]
+                , column [ width (fillPortion 1) ] []
+                ]
+
+        Failure ->
+            row
+                [ width fill
+                , height fill
+                , centerX
+                ]
+                [ column [ width (fillPortion 1) ] []
+                , column [ width (fillPortion 8) ]
+                    [ el [ centerX ] (text "Something went wrong :(") ]
                 , column [ width (fillPortion 1) ] []
                 ]
 
@@ -228,9 +273,10 @@ quizDecoder =
 
 questionDecoder : Decoder Question
 questionDecoder =
-    JD.map2 Question
+    JD.map3 Question
         (field "question" string)
         (field "options" optionsDecoder)
+        (JD.succeed Nothing)
 
 
 optionsDecoder : Decoder (List Option)
