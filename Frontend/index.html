@@ -10738,6 +10738,7 @@ var $author$project$Main$Failure = function (a) {
 	return {$: 'Failure', a: a};
 };
 var $author$project$Main$LoadingQuiz = {$: 'LoadingQuiz'};
+var $author$project$Main$LoadingScore = {$: 'LoadingScore'};
 var $author$project$Main$ViewingQuiz = function (a) {
 	return {$: 'ViewingQuiz', a: a};
 };
@@ -11064,7 +11065,7 @@ var $author$project$Main$update = F2(
 						var answer3 = _v4.a;
 						var submittedAnswers = {answer1: answer1, answer2: answer2, answer3: answer3};
 						return _Utils_Tuple2(
-							$author$project$Main$LoadingQuiz,
+							$author$project$Main$LoadingScore,
 							$author$project$Main$getScore(submittedAnswers));
 					} else {
 						return _Utils_Tuple2(
@@ -11161,25 +11162,6 @@ var $author$project$Main$update = F2(
 				}
 		}
 	});
-var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
-	return {$: 'AlignY', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
-var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Top);
-var $mdgriffith$elm_ui$Internal$Model$Rgba = F4(
-	function (a, b, c, d) {
-		return {$: 'Rgba', a: a, b: b, c: c, d: d};
-	});
-var $mdgriffith$elm_ui$Element$rgb255 = F3(
-	function (red, green, blue) {
-		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
-	});
-var $author$project$Colors$black = A3($mdgriffith$elm_ui$Element$rgb255, 39, 33, 33);
-var $mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
-	return {$: 'AlignX', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Model$CenterX = {$: 'CenterX'};
-var $mdgriffith$elm_ui$Element$centerX = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$CenterX);
 var $mdgriffith$elm_ui$Internal$Model$Colored = F3(
 	function (a, b, c) {
 		return {$: 'Colored', a: a, b: b, c: c};
@@ -11197,7 +11179,7 @@ var $mdgriffith$elm_ui$Internal$Flag$Second = function (a) {
 var $mdgriffith$elm_ui$Internal$Flag$flag = function (i) {
 	return (i > 31) ? $mdgriffith$elm_ui$Internal$Flag$Second(1 << (i - 32)) : $mdgriffith$elm_ui$Internal$Flag$Flag(1 << i);
 };
-var $mdgriffith$elm_ui$Internal$Flag$borderColor = $mdgriffith$elm_ui$Internal$Flag$flag(28);
+var $mdgriffith$elm_ui$Internal$Flag$bgColor = $mdgriffith$elm_ui$Internal$Flag$flag(8);
 var $elm$core$Basics$round = _Basics_round;
 var $mdgriffith$elm_ui$Internal$Model$floatClass = function (x) {
 	return $elm$core$String$fromInt(
@@ -11210,6 +11192,41 @@ var $mdgriffith$elm_ui$Internal$Model$formatColorClass = function (_v0) {
 	var alpha = _v0.d;
 	return $mdgriffith$elm_ui$Internal$Model$floatClass(red) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(green) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(blue) + ('-' + $mdgriffith$elm_ui$Internal$Model$floatClass(alpha))))));
 };
+var $mdgriffith$elm_ui$Element$Background$color = function (clr) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$bgColor,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Colored,
+			'bg-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
+			'background-color',
+			clr));
+};
+var $mdgriffith$elm_ui$Internal$Model$Rgba = F4(
+	function (a, b, c, d) {
+		return {$: 'Rgba', a: a, b: b, c: c, d: d};
+	});
+var $mdgriffith$elm_ui$Element$rgb255 = F3(
+	function (red, green, blue) {
+		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
+	});
+var $author$project$Colors$grey = A3($mdgriffith$elm_ui$Element$rgb255, 58, 58, 62);
+var $mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
+	return {$: 'AlignX', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
+var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
+var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
+var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
+var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
+	return {$: 'AlignY', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
+var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Top);
+var $author$project$Colors$black = A3($mdgriffith$elm_ui$Element$rgb255, 39, 33, 33);
+var $mdgriffith$elm_ui$Internal$Model$CenterX = {$: 'CenterX'};
+var $mdgriffith$elm_ui$Element$centerX = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$CenterX);
+var $mdgriffith$elm_ui$Internal$Flag$borderColor = $mdgriffith$elm_ui$Internal$Flag$flag(28);
 var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
 	return A2(
 		$mdgriffith$elm_ui$Internal$Model$StyleClass,
@@ -11234,12 +11251,12 @@ var $mdgriffith$elm_ui$Element$Font$color = function (fontColor) {
 var $mdgriffith$elm_ui$Internal$Model$Unkeyed = function (a) {
 	return {$: 'Unkeyed', a: a};
 };
-var $mdgriffith$elm_ui$Internal$Model$AsEl = {$: 'AsEl'};
-var $mdgriffith$elm_ui$Internal$Model$asEl = $mdgriffith$elm_ui$Internal$Model$AsEl;
+var $mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
+var $mdgriffith$elm_ui$Internal$Model$asColumn = $mdgriffith$elm_ui$Internal$Model$AsColumn;
+var $mdgriffith$elm_ui$Internal$Style$classes = {above: 'a', active: 'atv', alignBottom: 'ab', alignCenterX: 'cx', alignCenterY: 'cy', alignContainerBottom: 'acb', alignContainerCenterX: 'accx', alignContainerCenterY: 'accy', alignContainerRight: 'acr', alignLeft: 'al', alignRight: 'ar', alignTop: 'at', alignedHorizontally: 'ah', alignedVertically: 'av', any: 's', behind: 'bh', below: 'b', bold: 'w7', borderDashed: 'bd', borderDotted: 'bdt', borderNone: 'bn', borderSolid: 'bs', capturePointerEvents: 'cpe', clip: 'cp', clipX: 'cpx', clipY: 'cpy', column: 'c', container: 'ctr', contentBottom: 'cb', contentCenterX: 'ccx', contentCenterY: 'ccy', contentLeft: 'cl', contentRight: 'cr', contentTop: 'ct', cursorPointer: 'cptr', cursorText: 'ctxt', focus: 'fcs', focusedWithin: 'focus-within', fullSize: 'fs', grid: 'g', hasBehind: 'hbh', heightContent: 'hc', heightExact: 'he', heightFill: 'hf', heightFillPortion: 'hfp', hover: 'hv', imageContainer: 'ic', inFront: 'fr', inputLabel: 'lbl', inputMultiline: 'iml', inputMultilineFiller: 'imlf', inputMultilineParent: 'imlp', inputMultilineWrapper: 'implw', inputText: 'it', italic: 'i', link: 'lnk', nearby: 'nb', noTextSelection: 'notxt', onLeft: 'ol', onRight: 'or', opaque: 'oq', overflowHidden: 'oh', page: 'pg', paragraph: 'p', passPointerEvents: 'ppe', root: 'ui', row: 'r', scrollbars: 'sb', scrollbarsX: 'sbx', scrollbarsY: 'sby', seButton: 'sbt', single: 'e', sizeByCapital: 'cap', spaceEvenly: 'sev', strike: 'sk', text: 't', textCenter: 'tc', textExtraBold: 'w8', textExtraLight: 'w2', textHeavy: 'w9', textJustify: 'tj', textJustifyAll: 'tja', textLeft: 'tl', textLight: 'w3', textMedium: 'w5', textNormalWeight: 'w4', textRight: 'tr', textSemiBold: 'w6', textThin: 'w1', textUnitalicized: 'tun', transition: 'ts', transparent: 'clr', underline: 'u', widthContent: 'wc', widthExact: 'we', widthFill: 'wf', widthFillPortion: 'wfp', wrapped: 'wrp'};
 var $mdgriffith$elm_ui$Internal$Model$Generic = {$: 'Generic'};
 var $mdgriffith$elm_ui$Internal$Model$div = $mdgriffith$elm_ui$Internal$Model$Generic;
 var $mdgriffith$elm_ui$Internal$Model$NoNearbyChildren = {$: 'NoNearbyChildren'};
-var $mdgriffith$elm_ui$Internal$Style$classes = {above: 'a', active: 'atv', alignBottom: 'ab', alignCenterX: 'cx', alignCenterY: 'cy', alignContainerBottom: 'acb', alignContainerCenterX: 'accx', alignContainerCenterY: 'accy', alignContainerRight: 'acr', alignLeft: 'al', alignRight: 'ar', alignTop: 'at', alignedHorizontally: 'ah', alignedVertically: 'av', any: 's', behind: 'bh', below: 'b', bold: 'w7', borderDashed: 'bd', borderDotted: 'bdt', borderNone: 'bn', borderSolid: 'bs', capturePointerEvents: 'cpe', clip: 'cp', clipX: 'cpx', clipY: 'cpy', column: 'c', container: 'ctr', contentBottom: 'cb', contentCenterX: 'ccx', contentCenterY: 'ccy', contentLeft: 'cl', contentRight: 'cr', contentTop: 'ct', cursorPointer: 'cptr', cursorText: 'ctxt', focus: 'fcs', focusedWithin: 'focus-within', fullSize: 'fs', grid: 'g', hasBehind: 'hbh', heightContent: 'hc', heightExact: 'he', heightFill: 'hf', heightFillPortion: 'hfp', hover: 'hv', imageContainer: 'ic', inFront: 'fr', inputLabel: 'lbl', inputMultiline: 'iml', inputMultilineFiller: 'imlf', inputMultilineParent: 'imlp', inputMultilineWrapper: 'implw', inputText: 'it', italic: 'i', link: 'lnk', nearby: 'nb', noTextSelection: 'notxt', onLeft: 'ol', onRight: 'or', opaque: 'oq', overflowHidden: 'oh', page: 'pg', paragraph: 'p', passPointerEvents: 'ppe', root: 'ui', row: 'r', scrollbars: 'sb', scrollbarsX: 'sbx', scrollbarsY: 'sby', seButton: 'sbt', single: 'e', sizeByCapital: 'cap', spaceEvenly: 'sev', strike: 'sk', text: 't', textCenter: 'tc', textExtraBold: 'w8', textExtraLight: 'w2', textHeavy: 'w9', textJustify: 'tj', textJustifyAll: 'tja', textLeft: 'tl', textLight: 'w3', textMedium: 'w5', textNormalWeight: 'w4', textRight: 'tr', textSemiBold: 'w6', textThin: 'w1', textUnitalicized: 'tun', transition: 'ts', transparent: 'clr', underline: 'u', widthContent: 'wc', widthExact: 'we', widthFill: 'wf', widthFillPortion: 'wfp', wrapped: 'wrp'};
 var $mdgriffith$elm_ui$Internal$Model$columnClass = $mdgriffith$elm_ui$Internal$Style$classes.any + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.column);
 var $mdgriffith$elm_ui$Internal$Model$gridClass = $mdgriffith$elm_ui$Internal$Style$classes.any + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.grid);
 var $mdgriffith$elm_ui$Internal$Model$pageClass = $mdgriffith$elm_ui$Internal$Style$classes.any + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.page);
@@ -11336,6 +11353,8 @@ var $mdgriffith$elm_ui$Internal$Model$addKeyedChildren = F3(
 							inFront)));
 		}
 	});
+var $mdgriffith$elm_ui$Internal$Model$AsEl = {$: 'AsEl'};
+var $mdgriffith$elm_ui$Internal$Model$asEl = $mdgriffith$elm_ui$Internal$Model$AsEl;
 var $mdgriffith$elm_ui$Internal$Model$AsParagraph = {$: 'AsParagraph'};
 var $mdgriffith$elm_ui$Internal$Model$asParagraph = $mdgriffith$elm_ui$Internal$Model$AsParagraph;
 var $mdgriffith$elm_ui$Internal$Flag$alignBottom = $mdgriffith$elm_ui$Internal$Flag$flag(41);
@@ -16576,12 +16595,37 @@ var $mdgriffith$elm_ui$Internal$Model$Height = function (a) {
 	return {$: 'Height', a: a};
 };
 var $mdgriffith$elm_ui$Element$height = $mdgriffith$elm_ui$Internal$Model$Height;
+var $mdgriffith$elm_ui$Internal$Model$Attr = function (a) {
+	return {$: 'Attr', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Model$htmlClass = function (cls) {
+	return $mdgriffith$elm_ui$Internal$Model$Attr(
+		$elm$html$Html$Attributes$class(cls));
+};
 var $mdgriffith$elm_ui$Internal$Model$Content = {$: 'Content'};
 var $mdgriffith$elm_ui$Element$shrink = $mdgriffith$elm_ui$Internal$Model$Content;
 var $mdgriffith$elm_ui$Internal$Model$Width = function (a) {
 	return {$: 'Width', a: a};
 };
 var $mdgriffith$elm_ui$Element$width = $mdgriffith$elm_ui$Internal$Model$Width;
+var $mdgriffith$elm_ui$Element$column = F2(
+	function (attrs, children) {
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asColumn,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentTop + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.contentLeft)),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+						attrs))),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+	});
 var $mdgriffith$elm_ui$Element$el = F2(
 	function (attrs, child) {
 		return A4(
@@ -16603,50 +16647,7 @@ var $mdgriffith$elm_ui$Internal$Model$Fill = function (a) {
 	return {$: 'Fill', a: a};
 };
 var $mdgriffith$elm_ui$Element$fill = $mdgriffith$elm_ui$Internal$Model$Fill(1);
-var $mdgriffith$elm_ui$Internal$Model$NoAttribute = {$: 'NoAttribute'};
-var $mdgriffith$elm_ui$Internal$Flag$bgColor = $mdgriffith$elm_ui$Internal$Flag$flag(8);
-var $mdgriffith$elm_ui$Internal$Flag$bgGradient = $mdgriffith$elm_ui$Internal$Flag$flag(10);
-var $mdgriffith$elm_ui$Element$Background$gradient = function (_v0) {
-	var angle = _v0.angle;
-	var steps = _v0.steps;
-	if (!steps.b) {
-		return $mdgriffith$elm_ui$Internal$Model$NoAttribute;
-	} else {
-		if (!steps.b.b) {
-			var clr = steps.a;
-			return A2(
-				$mdgriffith$elm_ui$Internal$Model$StyleClass,
-				$mdgriffith$elm_ui$Internal$Flag$bgColor,
-				A3(
-					$mdgriffith$elm_ui$Internal$Model$Colored,
-					'bg-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
-					'background-color',
-					clr));
-		} else {
-			return A2(
-				$mdgriffith$elm_ui$Internal$Model$StyleClass,
-				$mdgriffith$elm_ui$Internal$Flag$bgGradient,
-				A3(
-					$mdgriffith$elm_ui$Internal$Model$Single,
-					'bg-grad-' + A2(
-						$elm$core$String$join,
-						'-',
-						A2(
-							$elm$core$List$cons,
-							$mdgriffith$elm_ui$Internal$Model$floatClass(angle),
-							A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$formatColorClass, steps))),
-					'background-image',
-					'linear-gradient(' + (A2(
-						$elm$core$String$join,
-						', ',
-						A2(
-							$elm$core$List$cons,
-							$elm$core$String$fromFloat(angle) + 'rad',
-							A2($elm$core$List$map, $mdgriffith$elm_ui$Internal$Model$formatColor, steps))) + ')')));
-		}
-	}
-};
-var $author$project$Colors$green = A3($mdgriffith$elm_ui$Element$rgb255, 6, 255, 0);
+var $mdgriffith$elm_ui$Element$fillPortion = $mdgriffith$elm_ui$Internal$Model$Fill;
 var $mdgriffith$elm_ui$Internal$Model$Describe = function (a) {
 	return {$: 'Describe', a: a};
 };
@@ -16654,7 +16655,6 @@ var $mdgriffith$elm_ui$Internal$Model$Heading = function (a) {
 	return {$: 'Heading', a: a};
 };
 var $mdgriffith$elm_ui$Element$Region$heading = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Describe, $mdgriffith$elm_ui$Internal$Model$Heading);
-var $author$project$Colors$orange = A3($mdgriffith$elm_ui$Element$rgb255, 255, 77, 0);
 var $mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
 	function (a, b, c, d, e) {
 		return {$: 'PaddingStyle', a: a, b: b, c: c, d: d, e: e};
@@ -16686,13 +16686,6 @@ var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
 };
 var $mdgriffith$elm_ui$Internal$Model$AsRow = {$: 'AsRow'};
 var $mdgriffith$elm_ui$Internal$Model$asRow = $mdgriffith$elm_ui$Internal$Model$AsRow;
-var $mdgriffith$elm_ui$Internal$Model$Attr = function (a) {
-	return {$: 'Attr', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Model$htmlClass = function (cls) {
-	return $mdgriffith$elm_ui$Internal$Model$Attr(
-		$elm$html$Html$Attributes$class(cls));
-};
 var $mdgriffith$elm_ui$Element$row = F2(
 	function (attrs, children) {
 		return A4(
@@ -16711,12 +16704,67 @@ var $mdgriffith$elm_ui$Element$row = F2(
 						attrs))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
+var $mdgriffith$elm_ui$Internal$Model$boxShadowClass = function (shadow) {
+	return $elm$core$String$concat(
+		_List_fromArray(
+			[
+				shadow.inset ? 'box-inset' : 'box-',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.offset.a) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.offset.b) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.blur) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$floatClass(shadow.size) + 'px',
+				$mdgriffith$elm_ui$Internal$Model$formatColorClass(shadow.color)
+			]));
+};
+var $mdgriffith$elm_ui$Internal$Flag$shadows = $mdgriffith$elm_ui$Internal$Flag$flag(19);
+var $mdgriffith$elm_ui$Element$Border$shadow = function (almostShade) {
+	var shade = {blur: almostShade.blur, color: almostShade.color, inset: false, offset: almostShade.offset, size: almostShade.size};
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$shadows,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			$mdgriffith$elm_ui$Internal$Model$boxShadowClass(shade),
+			'box-shadow',
+			$mdgriffith$elm_ui$Internal$Model$formatBoxShadow(shade)));
+};
+var $author$project$Colors$shadowBlack = A3($mdgriffith$elm_ui$Element$rgb255, 0, 0, 0);
+var $mdgriffith$elm_ui$Internal$Model$FontSize = function (a) {
+	return {$: 'FontSize', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Flag$fontSize = $mdgriffith$elm_ui$Internal$Flag$flag(4);
+var $mdgriffith$elm_ui$Element$Font$size = function (i) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$fontSize,
+		$mdgriffith$elm_ui$Internal$Model$FontSize(i));
+};
+var $mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
+	function (a, b, c) {
+		return {$: 'SpacingStyle', a: a, b: b, c: c};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$spacing = $mdgriffith$elm_ui$Internal$Flag$flag(3);
+var $mdgriffith$elm_ui$Internal$Model$spacingName = F2(
+	function (x, y) {
+		return 'spacing-' + ($elm$core$String$fromInt(x) + ('-' + $elm$core$String$fromInt(y)));
+	});
+var $mdgriffith$elm_ui$Element$spacing = function (x) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$spacing,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$SpacingStyle,
+			A2($mdgriffith$elm_ui$Internal$Model$spacingName, x, x),
+			x,
+			x));
+};
 var $mdgriffith$elm_ui$Internal$Model$Text = function (a) {
 	return {$: 'Text', a: a};
 };
 var $mdgriffith$elm_ui$Element$text = function (content) {
 	return $mdgriffith$elm_ui$Internal$Model$Text(content);
 };
+var $author$project$Colors$white = A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
 var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
 	function (a, b, c, d, e) {
 		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
@@ -16733,6 +16781,7 @@ var $mdgriffith$elm_ui$Element$Border$width = function (v) {
 			v,
 			v));
 };
+var $author$project$Colors$zestGreen = A3($mdgriffith$elm_ui$Element$rgb255, 44, 214, 73);
 var $author$project$Main$header = A2(
 	$mdgriffith$elm_ui$Element$row,
 	_List_fromArray(
@@ -16741,34 +16790,65 @@ var $author$project$Main$header = A2(
 			$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 			$mdgriffith$elm_ui$Element$centerX,
 			$mdgriffith$elm_ui$Element$alignTop,
-			$mdgriffith$elm_ui$Element$padding(20),
-			$mdgriffith$elm_ui$Element$Background$gradient(
-			{
-				angle: 3.14,
-				steps: _List_fromArray(
-					[$author$project$Colors$black, $author$project$Colors$black, $author$project$Colors$black, $author$project$Colors$green])
-			}),
-			$mdgriffith$elm_ui$Element$Border$color(
-			A3($mdgriffith$elm_ui$Element$rgb255, 235, 235, 235)),
-			$mdgriffith$elm_ui$Element$Border$width(2),
-			$mdgriffith$elm_ui$Element$Border$rounded(5)
+			$mdgriffith$elm_ui$Element$spacing(5)
 		]),
 	_List_fromArray(
 		[
 			A2(
-			$mdgriffith$elm_ui$Element$el,
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$alignLeft,
+					$mdgriffith$elm_ui$Element$width(
+					$mdgriffith$elm_ui$Element$fillPortion(1))
+				]),
+			_List_Nil),
+			A2(
+			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$centerX,
-					$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$orange)
+					$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$white),
+					$mdgriffith$elm_ui$Element$Font$size(40),
+					$mdgriffith$elm_ui$Element$padding(20),
+					$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black),
+					$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$zestGreen),
+					$mdgriffith$elm_ui$Element$Border$width(1),
+					$mdgriffith$elm_ui$Element$Border$rounded(10),
+					$mdgriffith$elm_ui$Element$Border$shadow(
+					{
+						blur: 5,
+						color: $author$project$Colors$shadowBlack,
+						offset: _Utils_Tuple2(1.1, 1.1),
+						size: 0.5
+					}),
+					$mdgriffith$elm_ui$Element$width(
+					$mdgriffith$elm_ui$Element$fillPortion(8))
 				]),
-			$mdgriffith$elm_ui$Element$text('MG\'s pub quiz 🍻'))
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[$mdgriffith$elm_ui$Element$centerX]),
+					$mdgriffith$elm_ui$Element$text('MG\'s pub quiz 🍻'))
+				])),
+			A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$alignRight,
+					$mdgriffith$elm_ui$Element$width(
+					$mdgriffith$elm_ui$Element$fillPortion(1))
+				]),
+			_List_Nil)
 		]));
 var $mdgriffith$elm_ui$Internal$Model$InFront = {$: 'InFront'};
 var $mdgriffith$elm_ui$Internal$Model$Nearby = F2(
 	function (a, b) {
 		return {$: 'Nearby', a: a, b: b};
 	});
+var $mdgriffith$elm_ui$Internal$Model$NoAttribute = {$: 'NoAttribute'};
 var $mdgriffith$elm_ui$Element$createNearby = F2(
 	function (loc, element) {
 		if (element.$ === 'Empty') {
@@ -16928,15 +17008,11 @@ var $mdgriffith$elm_ui$Internal$Model$FontFamily = F2(
 	function (a, b) {
 		return {$: 'FontFamily', a: a, b: b};
 	});
-var $mdgriffith$elm_ui$Internal$Model$FontSize = function (a) {
-	return {$: 'FontSize', a: a};
-};
 var $mdgriffith$elm_ui$Internal$Model$SansSerif = {$: 'SansSerif'};
 var $mdgriffith$elm_ui$Internal$Model$Typeface = function (a) {
 	return {$: 'Typeface', a: a};
 };
 var $mdgriffith$elm_ui$Internal$Flag$fontFamily = $mdgriffith$elm_ui$Internal$Flag$flag(5);
-var $mdgriffith$elm_ui$Internal$Flag$fontSize = $mdgriffith$elm_ui$Internal$Flag$flag(4);
 var $elm$core$String$toLower = _String_toLower;
 var $elm$core$String$words = _String_words;
 var $mdgriffith$elm_ui$Internal$Model$renderFontClassName = F2(
@@ -17184,37 +17260,6 @@ var $mdgriffith$elm_ui$Element$Input$button = F2(
 	});
 var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
 var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
-var $mdgriffith$elm_ui$Element$Background$color = function (clr) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$bgColor,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Colored,
-			'bg-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
-			'background-color',
-			clr));
-};
-var $mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
-var $mdgriffith$elm_ui$Internal$Model$asColumn = $mdgriffith$elm_ui$Internal$Model$AsColumn;
-var $mdgriffith$elm_ui$Element$column = F2(
-	function (attrs, children) {
-		return A4(
-			$mdgriffith$elm_ui$Internal$Model$element,
-			$mdgriffith$elm_ui$Internal$Model$asColumn,
-			$mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentTop + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.contentLeft)),
-				A2(
-					$elm$core$List$cons,
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
-					A2(
-						$elm$core$List$cons,
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
-						attrs))),
-			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
-	});
-var $mdgriffith$elm_ui$Element$fillPortion = $mdgriffith$elm_ui$Internal$Model$Fill;
 var $mdgriffith$elm_ui$Internal$Model$Focus = {$: 'Focus'};
 var $mdgriffith$elm_ui$Internal$Model$PseudoSelector = F2(
 	function (a, b) {
@@ -17348,8 +17393,43 @@ var $mdgriffith$elm_ui$Element$focused = function (decs) {
 			$mdgriffith$elm_ui$Internal$Model$Focus,
 			$mdgriffith$elm_ui$Internal$Model$unwrapDecorations(decs)));
 };
-var $author$project$Colors$greyBrown = A3($mdgriffith$elm_ui$Element$rgb255, 68, 55, 55);
 var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
+var $mdgriffith$elm_ui$Internal$Model$paddingName = F4(
+	function (top, right, bottom, left) {
+		return 'pad-' + ($elm$core$String$fromInt(top) + ('-' + ($elm$core$String$fromInt(right) + ('-' + ($elm$core$String$fromInt(bottom) + ('-' + $elm$core$String$fromInt(left)))))));
+	});
+var $mdgriffith$elm_ui$Element$paddingEach = function (_v0) {
+	var top = _v0.top;
+	var right = _v0.right;
+	var bottom = _v0.bottom;
+	var left = _v0.left;
+	if (_Utils_eq(top, right) && (_Utils_eq(top, bottom) && _Utils_eq(top, left))) {
+		var topFloat = top;
+		return A2(
+			$mdgriffith$elm_ui$Internal$Model$StyleClass,
+			$mdgriffith$elm_ui$Internal$Flag$padding,
+			A5(
+				$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+				'p-' + $elm$core$String$fromInt(top),
+				topFloat,
+				topFloat,
+				topFloat,
+				topFloat));
+	} else {
+		return A2(
+			$mdgriffith$elm_ui$Internal$Model$StyleClass,
+			$mdgriffith$elm_ui$Internal$Flag$padding,
+			A5(
+				$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+				A4($mdgriffith$elm_ui$Internal$Model$paddingName, top, right, bottom, left),
+				top,
+				right,
+				bottom,
+				left));
+	}
+};
+var $author$project$Main$padButton = $mdgriffith$elm_ui$Element$paddingEach(
+	{bottom: 0, left: 0, right: 0, top: 4});
 var $author$project$Main$pageFrame = function (content) {
 	return A2(
 		$mdgriffith$elm_ui$Element$row,
@@ -17358,7 +17438,7 @@ var $author$project$Main$pageFrame = function (content) {
 				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 				$mdgriffith$elm_ui$Element$centerX,
-				$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black)
+				$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$grey)
 			]),
 		_List_fromArray(
 			[
@@ -17369,7 +17449,7 @@ var $author$project$Main$pageFrame = function (content) {
 						$mdgriffith$elm_ui$Element$width(
 						$mdgriffith$elm_ui$Element$fillPortion(1)),
 						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$orange)
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$grey)
 					]),
 				_List_Nil),
 				content,
@@ -17380,7 +17460,7 @@ var $author$project$Main$pageFrame = function (content) {
 						$mdgriffith$elm_ui$Element$width(
 						$mdgriffith$elm_ui$Element$fillPortion(1)),
 						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$orange)
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$grey)
 					]),
 				_List_Nil)
 			]));
@@ -17406,38 +17486,23 @@ var $author$project$Main$optionDisplay = F2(
 				[
 					$mdgriffith$elm_ui$Element$padding(5),
 					$mdgriffith$elm_ui$Element$Background$color(
-					isSelected ? $author$project$Colors$orange : $author$project$Colors$black),
+					isSelected ? $author$project$Colors$zestGreen : $author$project$Colors$black),
 					$mdgriffith$elm_ui$Element$Font$color(
-					isSelected ? $author$project$Colors$black : $author$project$Colors$orange),
-					$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$orange),
+					isSelected ? $author$project$Colors$black : $author$project$Colors$white),
+					$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$zestGreen),
 					$mdgriffith$elm_ui$Element$Border$width(1),
 					$mdgriffith$elm_ui$Element$Border$rounded(10)
 				]),
 			{
-				label: $mdgriffith$elm_ui$Element$text(option.text),
+				label: A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[$author$project$Main$padButton]),
+					$mdgriffith$elm_ui$Element$text(option.text)),
 				onPress: isSelected ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
 					A2($author$project$Main$SelectAnswer, question, option.id))
 			});
 	});
-var $mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
-	function (a, b, c) {
-		return {$: 'SpacingStyle', a: a, b: b, c: c};
-	});
-var $mdgriffith$elm_ui$Internal$Flag$spacing = $mdgriffith$elm_ui$Internal$Flag$flag(3);
-var $mdgriffith$elm_ui$Internal$Model$spacingName = F2(
-	function (x, y) {
-		return 'spacing-' + ($elm$core$String$fromInt(x) + ('-' + $elm$core$String$fromInt(y)));
-	});
-var $mdgriffith$elm_ui$Element$spacing = function (x) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$spacing,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$SpacingStyle,
-			A2($mdgriffith$elm_ui$Internal$Model$spacingName, x, x),
-			x,
-			x));
-};
 var $author$project$Main$questionDisplay = function (question) {
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
@@ -17447,11 +17512,16 @@ var $author$project$Main$questionDisplay = function (question) {
 				$mdgriffith$elm_ui$Element$padding(10),
 				$mdgriffith$elm_ui$Element$centerX,
 				$mdgriffith$elm_ui$Element$centerY,
-				$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$orange),
-				$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$greyBrown),
-				$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$orange),
-				$mdgriffith$elm_ui$Element$Border$width(1),
-				$mdgriffith$elm_ui$Element$Border$rounded(10)
+				$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$white),
+				$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black),
+				$mdgriffith$elm_ui$Element$Border$rounded(10),
+				$mdgriffith$elm_ui$Element$Border$shadow(
+				{
+					blur: 5,
+					color: $author$project$Colors$shadowBlack,
+					offset: _Utils_Tuple2(1.1, 1.1),
+					size: 0.5
+				})
 			]),
 		_List_fromArray(
 			[
@@ -17472,7 +17542,6 @@ var $author$project$Main$questionDisplay = function (question) {
 					question.options))
 			]));
 };
-var $author$project$Colors$white = A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
 var $author$project$Main$quizMenu = function (model) {
 	return $author$project$Main$pageFrame(
 		function () {
@@ -17486,7 +17555,7 @@ var $author$project$Main$quizMenu = function (model) {
 								$mdgriffith$elm_ui$Element$fillPortion(8)),
 								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 								$mdgriffith$elm_ui$Element$spacing(20),
-								$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black)
+								$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$grey)
 							]),
 						_List_fromArray(
 							[
@@ -17496,8 +17565,18 @@ var $author$project$Main$quizMenu = function (model) {
 									[
 										$mdgriffith$elm_ui$Element$centerX,
 										$mdgriffith$elm_ui$Element$centerY,
-										$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$orange),
-										$mdgriffith$elm_ui$Element$spacing(10)
+										$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$white),
+										$mdgriffith$elm_ui$Element$spacing(10),
+										$mdgriffith$elm_ui$Element$padding(20),
+										$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black),
+										$mdgriffith$elm_ui$Element$Border$rounded(10),
+										$mdgriffith$elm_ui$Element$Border$shadow(
+										{
+											blur: 5,
+											color: $author$project$Colors$shadowBlack,
+											offset: _Utils_Tuple2(1.1, 1.1),
+											size: 0.5
+										})
 									]),
 								_List_fromArray(
 									[
@@ -17510,21 +17589,26 @@ var $author$project$Main$quizMenu = function (model) {
 										$mdgriffith$elm_ui$Element$Input$button,
 										_List_fromArray(
 											[
-												$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$white),
-												$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$orange),
+												$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black),
+												$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$white),
 												$mdgriffith$elm_ui$Element$centerX,
 												$mdgriffith$elm_ui$Element$padding(5),
-												$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$orange),
+												$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$zestGreen),
 												$mdgriffith$elm_ui$Element$Border$width(1),
 												$mdgriffith$elm_ui$Element$Border$rounded(10),
 												$mdgriffith$elm_ui$Element$focused(
 												_List_fromArray(
 													[
-														$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$greyBrown)
+														$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$zestGreen),
+														$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$black)
 													]))
 											]),
 										{
-											label: $mdgriffith$elm_ui$Element$text('Click here to enter.'),
+											label: A2(
+												$mdgriffith$elm_ui$Element$el,
+												_List_fromArray(
+													[$mdgriffith$elm_ui$Element$centerY, $author$project$Main$padButton]),
+												$mdgriffith$elm_ui$Element$text('Click here to enter.')),
 											onPress: $elm$core$Maybe$Just($author$project$Main$ViewQuiz)
 										})
 									]))
@@ -17538,7 +17622,7 @@ var $author$project$Main$quizMenu = function (model) {
 								$mdgriffith$elm_ui$Element$width(
 								$mdgriffith$elm_ui$Element$fillPortion(8)),
 								$mdgriffith$elm_ui$Element$spacing(20),
-								$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black)
+								$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$grey)
 							]),
 						_Utils_ap(
 							A2($elm$core$List$map, $author$project$Main$questionDisplay, quiz),
@@ -17552,11 +17636,24 @@ var $author$project$Main$quizMenu = function (model) {
 											$mdgriffith$elm_ui$Element$padding(10),
 											$mdgriffith$elm_ui$Element$centerX,
 											$mdgriffith$elm_ui$Element$centerY,
-											$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$orange),
-											$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$greyBrown),
-											$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$orange),
+											$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$white),
+											$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black),
 											$mdgriffith$elm_ui$Element$Border$width(1),
-											$mdgriffith$elm_ui$Element$Border$rounded(10)
+											$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$zestGreen),
+											$mdgriffith$elm_ui$Element$Border$rounded(10),
+											$mdgriffith$elm_ui$Element$Border$shadow(
+											{
+												blur: 7,
+												color: $author$project$Colors$black,
+												offset: _Utils_Tuple2(1.1, 1.1),
+												size: 1.5
+											}),
+											$mdgriffith$elm_ui$Element$focused(
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$zestGreen),
+													$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$black)
+												]))
 										]),
 									{
 										label: $mdgriffith$elm_ui$Element$text('Submit Answers'),
@@ -17580,13 +17677,18 @@ var $author$project$Main$quizMenu = function (model) {
 									[
 										$mdgriffith$elm_ui$Element$centerX,
 										$mdgriffith$elm_ui$Element$centerY,
-										$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$orange),
+										$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$white),
 										$mdgriffith$elm_ui$Element$spacing(10),
-										$mdgriffith$elm_ui$Element$padding(10),
-										$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$greyBrown),
-										$mdgriffith$elm_ui$Element$Border$color($author$project$Colors$orange),
-										$mdgriffith$elm_ui$Element$Border$width(1),
-										$mdgriffith$elm_ui$Element$Border$rounded(10)
+										$mdgriffith$elm_ui$Element$padding(20),
+										$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black),
+										$mdgriffith$elm_ui$Element$Border$rounded(10),
+										$mdgriffith$elm_ui$Element$Border$shadow(
+										{
+											blur: 5,
+											color: $author$project$Colors$shadowBlack,
+											offset: _Utils_Tuple2(1.1, 1.1),
+											size: 0.5
+										})
 									]),
 								_List_fromArray(
 									[
@@ -17609,7 +17711,22 @@ var $author$project$Main$quizMenu = function (model) {
 								A2(
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
-									[$mdgriffith$elm_ui$Element$centerX]),
+									[
+										$mdgriffith$elm_ui$Element$centerX,
+										$mdgriffith$elm_ui$Element$centerY,
+										$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$white),
+										$mdgriffith$elm_ui$Element$spacing(10),
+										$mdgriffith$elm_ui$Element$padding(20),
+										$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black),
+										$mdgriffith$elm_ui$Element$Border$rounded(10),
+										$mdgriffith$elm_ui$Element$Border$shadow(
+										{
+											blur: 5,
+											color: $author$project$Colors$shadowBlack,
+											offset: _Utils_Tuple2(1.1, 1.1),
+											size: 0.5
+										})
+									]),
 								$mdgriffith$elm_ui$Element$text('Loading Quiz, Please wait...'))
 							]));
 				case 'LoadingScore':
@@ -17625,7 +17742,22 @@ var $author$project$Main$quizMenu = function (model) {
 								A2(
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
-									[$mdgriffith$elm_ui$Element$centerX]),
+									[
+										$mdgriffith$elm_ui$Element$centerX,
+										$mdgriffith$elm_ui$Element$centerY,
+										$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$white),
+										$mdgriffith$elm_ui$Element$spacing(10),
+										$mdgriffith$elm_ui$Element$padding(20),
+										$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black),
+										$mdgriffith$elm_ui$Element$Border$rounded(10),
+										$mdgriffith$elm_ui$Element$Border$shadow(
+										{
+											blur: 5,
+											color: $author$project$Colors$shadowBlack,
+											offset: _Utils_Tuple2(1.1, 1.1),
+											size: 0.5
+										})
+									]),
 								$mdgriffith$elm_ui$Element$text('Loading Score, Please wait...'))
 							]));
 				default:
@@ -17642,7 +17774,22 @@ var $author$project$Main$quizMenu = function (model) {
 								A2(
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
-									[$mdgriffith$elm_ui$Element$centerX]),
+									[
+										$mdgriffith$elm_ui$Element$centerX,
+										$mdgriffith$elm_ui$Element$centerY,
+										$mdgriffith$elm_ui$Element$Font$color($author$project$Colors$white),
+										$mdgriffith$elm_ui$Element$spacing(10),
+										$mdgriffith$elm_ui$Element$padding(20),
+										$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$black),
+										$mdgriffith$elm_ui$Element$Border$rounded(10),
+										$mdgriffith$elm_ui$Element$Border$shadow(
+										{
+											blur: 5,
+											color: $author$project$Colors$shadowBlack,
+											offset: _Utils_Tuple2(1.1, 1.1),
+											size: 0.5
+										})
+									]),
 								$mdgriffith$elm_ui$Element$text('Something went wrong :( ' + errString))
 							]));
 			}
@@ -17653,7 +17800,8 @@ var $author$project$Main$view = function (model) {
 		$mdgriffith$elm_ui$Element$layout,
 		_List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$inFront($author$project$Main$header)
+				$mdgriffith$elm_ui$Element$inFront($author$project$Main$header),
+				$mdgriffith$elm_ui$Element$Background$color($author$project$Colors$grey)
 			]),
 		$author$project$Main$quizMenu(model));
 };

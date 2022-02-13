@@ -82,7 +82,7 @@ update msg model =
                                     , answer3 = answer3
                                     }
                             in
-                            ( LoadingQuiz, getScore submittedAnswers )
+                            ( LoadingScore, getScore submittedAnswers )
 
                         _ ->
                             ( Failure "Not all questions answered", Cmd.none )
@@ -167,7 +167,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    layout [ inFront header ]
+    layout [ inFront header, Background.color Colors.grey ]
         (quizMenu model)
 
 
@@ -178,13 +178,26 @@ header =
         , width fill
         , centerX
         , alignTop
-        , padding 20
-        , Background.gradient { angle = 3.14, steps = [ Colors.black, Colors.black, Colors.black, Colors.green ] }
-        , Border.color (rgb255 235 235 235)
-        , Border.width 2
-        , Border.rounded 5
+        , spacing 5
         ]
-        [ el [ centerX, Font.color Colors.orange ] (text "MG's pub quiz 🍻") ]
+        [ column [ alignLeft, width <| fillPortion 1 ] []
+        , column
+            [ centerX
+            , Font.color Colors.white
+            , Font.size 40
+            , padding 20
+            , Background.color Colors.black
+            , Border.color Colors.zestGreen
+            , Border.width 1
+            , Border.rounded 10
+            , Border.shadow { offset = ( 1.1, 1.1 ), blur = 5, color = Colors.shadowBlack, size = 0.5 }
+
+            -- , Border.glow Colors.greyBrown 1
+            , width <| fillPortion 8
+            ]
+            [ el [ centerX ] <| text "MG's pub quiz 🍻" ]
+        , column [ alignRight, width <| fillPortion 1 ] []
+        ]
 
 
 questionDisplay : Question -> Element Msg
@@ -194,11 +207,10 @@ questionDisplay question =
         , padding 10
         , centerX
         , centerY
-        , Font.color Colors.orange
-        , Background.color Colors.greyBrown
-        , Border.color Colors.orange
-        , Border.width 1
+        , Font.color Colors.white
+        , Background.color Colors.black
         , Border.rounded 10
+        , Border.shadow { offset = ( 1.1, 1.1 ), blur = 5, color = Colors.shadowBlack, size = 0.5 }
         ]
         [ el [] (text question.question)
         , row
@@ -208,6 +220,11 @@ questionDisplay question =
           <|
             List.map (optionDisplay question) question.options
         ]
+
+
+padButton : Attribute msg
+padButton =
+    paddingEach { top = 4, bottom = 0, left = 0, right = 0 }
 
 
 optionDisplay : Question -> Option -> Element Msg
@@ -225,7 +242,7 @@ optionDisplay question option =
         [ padding 5
         , Background.color <|
             if isSelected then
-                Colors.orange
+                Colors.zestGreen
 
             else
                 Colors.black
@@ -234,8 +251,8 @@ optionDisplay question option =
                 Colors.black
 
             else
-                Colors.orange
-        , Border.color Colors.orange
+                Colors.white
+        , Border.color Colors.zestGreen
         , Border.width 1
         , Border.rounded 10
         ]
@@ -245,7 +262,7 @@ optionDisplay question option =
 
             else
                 Just <| SelectAnswer question option.id
-        , label = text option.text
+        , label = el [ padButton ] (text option.text)
         }
 
 
@@ -255,11 +272,11 @@ pageFrame content =
         [ width fill
         , height fill
         , centerX
-        , Background.color Colors.black
+        , Background.color Colors.grey
         ]
-        [ column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
+        [ column [ width (fillPortion 1), height fill, Background.color Colors.grey ] []
         , content
-        , column [ width (fillPortion 1), height fill, Background.color Colors.orange ] []
+        , column [ width (fillPortion 1), height fill, Background.color Colors.grey ] []
         ]
 
 
@@ -272,28 +289,34 @@ quizMenu model =
                     [ width (fillPortion 8)
                     , height fill
                     , spacing 20
-                    , Background.color Colors.black
+                    , Background.color Colors.grey
                     ]
                     [ column
                         [ centerX
                         , centerY
-                        , Font.color Colors.orange
+                        , Font.color Colors.white
                         , spacing 10
+                        , padding 20
+                        , Background.color Colors.black
+                        , Border.rounded 10
+                        , Border.shadow { offset = ( 1.1, 1.1 ), blur = 5, color = Colors.shadowBlack, size = 0.5 }
                         ]
                         [ el [ centerX ] (text "Welcome to the Pub quiz!")
                         , Input.button
-                            [ Background.color Colors.white
-                            , Font.color Colors.orange
+                            [ Background.color Colors.black
+                            , Font.color Colors.white
                             , centerX
                             , padding 5
-                            , Border.color Colors.orange
+                            , Border.color Colors.zestGreen
                             , Border.width 1
                             , Border.rounded 10
                             , Element.focused
-                                [ Background.color Colors.greyBrown ]
+                                [ Background.color Colors.zestGreen
+                                , Font.color Colors.black
+                                ]
                             ]
                             { onPress = Just ViewQuiz
-                            , label = text "Click here to enter."
+                            , label = el [ centerY, padButton ] (text "Click here to enter.")
                             }
                         ]
                     ]
@@ -302,7 +325,7 @@ quizMenu model =
                 column
                     [ width (fillPortion 8)
                     , spacing 20
-                    , Background.color Colors.black
+                    , Background.color Colors.grey
                     ]
                 <|
                     List.map questionDisplay quiz
@@ -312,11 +335,13 @@ quizMenu model =
                                     , padding 10
                                     , centerX
                                     , centerY
-                                    , Font.color Colors.orange
-                                    , Background.color Colors.greyBrown
-                                    , Border.color Colors.orange
+                                    , Font.color Colors.white
+                                    , Background.color Colors.black
                                     , Border.width 1
+                                    , Border.color Colors.zestGreen
                                     , Border.rounded 10
+                                    , Border.shadow { offset = ( 1.1, 1.1 ), blur = 7, color = Colors.black, size = 1.5 }
+                                    , Element.focused [ Background.color Colors.zestGreen, Font.color Colors.black ]
                                     ]
                                     { onPress = Just ViewScore, label = text "Submit Answers" }
 
@@ -329,13 +354,12 @@ quizMenu model =
                     [ column
                         [ centerX
                         , centerY
-                        , Font.color Colors.orange
+                        , Font.color Colors.white
                         , spacing 10
-                        , padding 10
-                        , Background.color Colors.greyBrown
-                        , Border.color Colors.orange
-                        , Border.width 1
+                        , padding 20
+                        , Background.color Colors.black
                         , Border.rounded 10
+                        , Border.shadow { offset = ( 1.1, 1.1 ), blur = 5, color = Colors.shadowBlack, size = 0.5 }
                         ]
                         [ if score == 2 then
                             text ("Your score is: " ++ String.fromInt score)
@@ -350,15 +374,48 @@ quizMenu model =
 
             LoadingQuiz ->
                 column [ width (fillPortion 8) ]
-                    [ el [ centerX ] (text "Loading Quiz, Please wait...") ]
+                    [ el
+                        [ centerX
+                        , centerY
+                        , Font.color Colors.white
+                        , spacing 10
+                        , padding 20
+                        , Background.color Colors.black
+                        , Border.rounded 10
+                        , Border.shadow { offset = ( 1.1, 1.1 ), blur = 5, color = Colors.shadowBlack, size = 0.5 }
+                        ]
+                        (text "Loading Quiz, Please wait...")
+                    ]
 
             LoadingScore ->
                 column [ width (fillPortion 8) ]
-                    [ el [ centerX ] (text "Loading Score, Please wait...") ]
+                    [ el
+                        [ centerX
+                        , centerY
+                        , Font.color Colors.white
+                        , spacing 10
+                        , padding 20
+                        , Background.color Colors.black
+                        , Border.rounded 10
+                        , Border.shadow { offset = ( 1.1, 1.1 ), blur = 5, color = Colors.shadowBlack, size = 0.5 }
+                        ]
+                        (text "Loading Score, Please wait...")
+                    ]
 
             Failure errString ->
                 column [ width (fillPortion 8) ]
-                    [ el [ centerX ] (text ("Something went wrong :( " ++ errString)) ]
+                    [ el
+                        [ centerX
+                        , centerY
+                        , Font.color Colors.white
+                        , spacing 10
+                        , padding 20
+                        , Background.color Colors.black
+                        , Border.rounded 10
+                        , Border.shadow { offset = ( 1.1, 1.1 ), blur = 5, color = Colors.shadowBlack, size = 0.5 }
+                        ]
+                        (text ("Something went wrong :( " ++ errString))
+                    ]
 
 
 
