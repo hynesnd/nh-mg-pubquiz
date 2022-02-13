@@ -6,13 +6,13 @@ This project is a prototype of a pub quiz web app.
 
 - Users will access the site and be presented with a set of quiz questions fetchd from the back end api.
 - The user can then click buttons to select their answers and submit their answers.
-- The answers will be checked in the backend and a score returned to the user in the front en
+- The answers will be checked in the backend and a score returned to the user in the front end.
 
 It is written using:
 
 - [Node.js](https://nodejs.org/en/)
 - [Express](https://expressjs.com/) as web server app framework.
-- [Jest](https://jestjs.io/) & [supertest](https://www.npmjs.com/package/supertest) for TDD testing.
+- [Jest](https://jestjs.io/) & [supertest](https://www.npmjs.com/package/supertest) for back end testing.
 - [Elm](https://elm-lang.org/) with [Elm-ui](https://package.elm-lang.org/packages/mdgriffith/elm-ui/1.1.8/) for Frontend & Styling
 
 ## Minimum prerequisites for running this project
@@ -22,7 +22,7 @@ You will need to have the following software installed to download and work with
 - Node.js v17.4.0 - Install instructions [Here](https://nodejs.dev/learn/how-to-install-nodejs)
 - A code editor such as [VSCode](https://code.visualstudio.com/)
 
-## Cloning and testing this project
+## Running this project
 
 <br>
 
