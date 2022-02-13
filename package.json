@@ -1,7 +1,7 @@
 {
   "name": "nh-mg-pubquiz",
   "version": "1.0.0",
-  "description": "Pub quiz",
+  "description": "A small app to serve a multiple choice pub quiz and calculate scores.",
   "main": "index.js",
   "scripts": {
     "test": "jest ./Backend/__test__/app.test.js --watch",
@@ -21,6 +21,8 @@
   "homepage": "https://github.com/hynesnd/nh-mg-pubquiz#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "elm": "^0.19.1-5",
+    "elm-live": "^4.0.2",
     "express": "^4.17.2"
   },
   "devDependencies": {
