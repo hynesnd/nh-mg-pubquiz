@@ -8,7 +8,7 @@
 
 # Endpoints
 
-- GET api/ : Return a list of endpoints.
+- GET api/ : Return a hello world.
 
 - GET api/quiz/ : Should return a json with an array of quiz questions for the front end to present.
 
