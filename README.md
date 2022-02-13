@@ -66,3 +66,5 @@ Or, to run with debug tools enabled:
 ```bash
 npm run fe-dev
 ```
+
+By default elm-live will run the front end from `localhost:8000`
