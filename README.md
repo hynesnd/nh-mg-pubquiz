@@ -10,10 +10,11 @@ This project is a prototype of a pub quiz web app.
 
 It is written using:
 
-- [Node.js](https://nodejs.org/en/)
-- [Express](https://expressjs.com/) as web server app framework.
-- [Jest](https://jestjs.io/) & [supertest](https://www.npmjs.com/package/supertest) for back end testing.
 - [Elm](https://elm-lang.org/) with [Elm-ui](https://package.elm-lang.org/packages/mdgriffith/elm-ui/1.1.8/) for Frontend & Styling
+- [Node.js](https://nodejs.org/en/)
+- [Express](https://expressjs.com/) as api server framework.
+- [Jest](https://jestjs.io/) & [supertest](https://www.npmjs.com/package/supertest) for back end testing.
+
 
 ## Minimum prerequisites for running this project
 
