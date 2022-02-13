@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest ./Backend/__test__/app.test.js --watch",
     "start": "node ./Backend/listen.js",
-    "fe-dev": "cd Frontend && elm-live -- src/Main.elm --output=index.html --debug"
+    "fe-dev": "cd Frontend && elm-live -- src/Main.elm --output=index.html --debug",
+    "fe-start": "cd Frontend && elm-live -- src/Main.elm --output=index.html --optimize"
   },
   "repository": {
     "type": "git",
