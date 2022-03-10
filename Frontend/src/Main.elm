@@ -280,6 +280,23 @@ pageFrame content =
         ]
 
 
+resetButton =
+    Input.button
+        [ Background.color Colors.black
+        , Font.color Colors.white
+        , centerX
+        , padding 5
+        , Border.color Colors.zestGreen
+        , Border.width 1
+        , Border.rounded 10
+        , Element.focused
+            [ Background.color Colors.zestGreen
+            , Font.color Colors.black
+            ]
+        ]
+        { onPress = Just ViewWelcome, label = text "Reset" }
+
+
 quizMenu : Model -> Element Msg
 quizMenu model =
     pageFrame <|
@@ -362,13 +379,22 @@ quizMenu model =
                         , Border.shadow { offset = ( 1.1, 1.1 ), blur = 5, color = Colors.shadowBlack, size = 0.5 }
                         ]
                         [ if score == 2 then
-                            text ("Your score is: " ++ String.fromInt score)
+                            column []
+                                [ text ("Your score is: " ++ String.fromInt score)
+                                , resetButton
+                                ]
 
                           else if score > 2 then
-                            text ("Congratulations! Your score is: " ++ String.fromInt score)
+                            column []
+                                [ text ("Congratulations! Your score is: " ++ String.fromInt score)
+                                , resetButton
+                                ]
 
                           else
-                            text ("Bad luck! Your score is: " ++ String.fromInt score)
+                            column []
+                                [ text ("Bad luck! Your score is: " ++ String.fromInt score)
+                                , resetButton
+                                ]
                         ]
                     ]
 
